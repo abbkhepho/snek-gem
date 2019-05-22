@@ -54,6 +54,7 @@ def move(position):
     snek[1] += position[1]
 
 for row in range(0, w):
+    
     for collumn in range(0, h):
         y += size
         

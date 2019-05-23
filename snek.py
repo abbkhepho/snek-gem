@@ -23,17 +23,17 @@ foodsize_y = 0
 food_coord = 0
 
 snek = [5, 5]
-snek_body = [[4, 5], [3, 5]]
+snek_body = [[3, 5], [4, 5]]
 
 snek_x = snek[0] * size
 snek_y = snek[1] * size
-snek_coord = snek_x, snek_y, snek_x + size, snek_y + size
+snek_coord = snek_x, snek_y, snek_x + size, snek_y + size   
     
 def genFood():
     global food_entity
     global food
-    food_x = randint(0, w)
-    food_y = randint(0, h)
+    food_x = randint(0, w - 1)
+    food_y = randint(0, h - 1)
     food = [food_x, food_y]
     foodsize_x = food_x * size
     foodsize_y = food_y * size
@@ -48,16 +48,30 @@ def eatFood():
 def move(position):
     dx = position[0] * size 
     dy = position[1] * size
-    snek_body.append(snek)
     C.move(Snake, dx, dy)
     snek[0] += position[0]
     snek[1] += position[1]
 
+def modify():
+    for entity in snek:
+        for block in snek_body:
+            global snek_body_x
+            global snek_body_y
+            snek_body_x = block[0] * size
+            snek_body_y = block[1] * size
+            snek_body_coord = snek_body_x, snek_body_y, snek_body_x + size, snek_body_y + size
+
+        SnakeBody = C.create_rectangle(snek_body_coord, fill = "white")
+
+    snek_body.append(snek)
+
+    print(snek_body)
+
 for row in range(0, w):
-    
+
     for collumn in range(0, h):
         y += size
-        
+
         C.create_rectangle(map_coord)
 
     x += size
@@ -82,6 +96,9 @@ while True:
         dir = [0, 0]
         dir[0] = 1
 
+    time.sleep(0.1)
+    move(dir)
+
     if snek == food:
         eatFood()
 
@@ -95,8 +112,6 @@ while True:
     elif snek[1] > 23:
         master.destroy()
 
-    time.sleep(0.2)
-    move(dir)
     C.update()
 
 mainloop()

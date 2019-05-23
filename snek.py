@@ -49,25 +49,14 @@ def move(position):
     dx = position[0] * size 
     dy = position[1] * size
     C.move(Snake, dx, dy)
-    snek[0] = snek[1]
     snek[1][0] += position[0]
     snek[1][1] += position[1]
 
 def modify():
     snek_body.append(snek[1])
-
     if snek[1] != food:
         del snek_body[0]
     print(snek_body)
-        # for block in snek_body:
-        #     global snek_body_x
-        #     global snek_body_y
-        #     snek_body_x = block[0] * size
-        #     snek_body_y = block[1] * size
-        #     snek_body_coord = snek_body_x, snek_body_y, snek_body_x + size, snek_body_y + size
-
-        # SnakeBody = C.create_rectangle(snek_body_coord, fill = "white")
-        # SnakeBodyRemove = C.delete(SnakeBody)
 
 for row in range(0, w):
     for collumn in range(0, h):

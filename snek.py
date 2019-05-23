@@ -22,11 +22,11 @@ foodsize_x = 0
 foodsize_y = 0
 food_coord = 0
 
-snek = [5, 5]
-snek_body = [[3, 5], [4, 5]]
+snek = [[4, 5], [5, 5]]
+snek_body = [3, 5]
 
-snek_x = snek[0] * size
-snek_y = snek[1] * size
+snek_x = snek[1][0] * size
+snek_y = snek[1][1] * size
 snek_coord = snek_x, snek_y, snek_x + size, snek_y + size   
     
 def genFood():
@@ -49,31 +49,30 @@ def move(position):
     dx = position[0] * size 
     dy = position[1] * size
     C.move(Snake, dx, dy)
-    snek[0] += position[0]
-    snek[1] += position[1]
+    snek[0] = snek[1]
+    snek[1][0] += position[0]
+    snek[1][1] += position[1]
 
 def modify():
-    for entity in snek:
-        for block in snek_body:
-            global snek_body_x
-            global snek_body_y
-            snek_body_x = block[0] * size
-            snek_body_y = block[1] * size
-            snek_body_coord = snek_body_x, snek_body_y, snek_body_x + size, snek_body_y + size
+    snek_body.append(snek[1])
 
-        SnakeBody = C.create_rectangle(snek_body_coord, fill = "white")
-
-    snek_body.append(snek)
-
+    if snek[1] != food:
+        del snek_body[0]
     print(snek_body)
+        # for block in snek_body:
+        #     global snek_body_x
+        #     global snek_body_y
+        #     snek_body_x = block[0] * size
+        #     snek_body_y = block[1] * size
+        #     snek_body_coord = snek_body_x, snek_body_y, snek_body_x + size, snek_body_y + size
+
+        # SnakeBody = C.create_rectangle(snek_body_coord, fill = "white")
+        # SnakeBodyRemove = C.delete(SnakeBody)
 
 for row in range(0, w):
-
     for collumn in range(0, h):
         y += size
-
         C.create_rectangle(map_coord)
-
     x += size
     y = 0
 
@@ -86,30 +85,31 @@ while True:
     if keyboard.is_pressed('w') and dir[1] != 1:
         dir = [0, 0]
         dir[1] = -1
-    if keyboard.is_pressed('s') and dir[1] != -1:
+    elif keyboard.is_pressed('s') and dir[1] != -1:
         dir = [0, 0]
         dir[1] = 1
-    if keyboard.is_pressed('a') and dir[0] != 1:
+    elif keyboard.is_pressed('a') and dir[0] != 1:
         dir = [0, 0]
         dir[0] = -1
-    if keyboard.is_pressed('d') and dir[0] != -1:
+    elif keyboard.is_pressed('d') and dir[0] != -1:
         dir = [0, 0]
         dir[0] = 1
 
-    time.sleep(0.1)
     move(dir)
+    modify()
+    time.sleep(0.09)
 
-    if snek == food:
+    if snek[1] == food:
         eatFood()
 
-    if snek[0] < 0:
+    if snek[1][0] < 0:
         master.destroy()
-    elif snek[0] > 31:
+    elif snek[1][0] > 31:
         master.destroy()
 
-    if snek[1] < 0:
+    if snek[1][1] < 0:
         master.destroy()
-    elif snek[1] > 23:
+    elif snek[1][1] > 23:
         master.destroy()
 
     C.update()

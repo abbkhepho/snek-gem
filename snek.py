@@ -13,7 +13,7 @@ h = 24
 x = 0
 y = 0
 size = 20
-dir = [0, 0]
+dir = [1, 0]
 map_coord = x, y, x + size, y + size
 
 food_x = 0
@@ -22,11 +22,11 @@ foodsize_x = 0
 foodsize_y = 0
 food_coord = 0
 
-snek = [[4, 5], [5, 5]]
-snek_body = [3, 5]
+snek = [5, 5]
+snek_body = [[3, 5], [4, 5]]
 
-snek_x = snek[1][0] * size
-snek_y = snek[1][1] * size
+snek_x = snek[0] * size
+snek_y = snek[1] * size
 snek_coord = snek_x, snek_y, snek_x + size, snek_y + size   
     
 def genFood():
@@ -49,14 +49,14 @@ def move(position):
     dx = position[0] * size 
     dy = position[1] * size
     C.move(Snake, dx, dy)
-    snek[1][0] += position[0]
-    snek[1][1] += position[1]
+    snek[0] += position[0]
+    snek[1] += position[1]
 
 def modify():
-    snek_body.append(snek[1])
-    if snek[1] != food:
+    snek_body.append([snek[0], snek[1]])
+    if snek != food:
         del snek_body[0]
-    print(snek_body)
+    print(snek_body, snek)
 
 for row in range(0, w):
     for collumn in range(0, h):
@@ -69,6 +69,12 @@ C.update()
 genFood()
 
 Snake = C.create_rectangle(snek_coord, fill = "white")
+
+for x in snek_body:
+    snek_body_x = x[0] * size
+    snek_body_y = x[1] * size
+    snek_body_coord = snek_body_x, snek_body_y, snek_body_x + size, snek_body_y + size 
+    SnakeBody = C.create_rectangle(snek_body_coord, fill = "white")
 
 while True:
     if keyboard.is_pressed('w') and dir[1] != 1:
@@ -86,21 +92,29 @@ while True:
 
     move(dir)
     modify()
-    time.sleep(0.09)
+    time.sleep(0.1)
 
-    if snek[1] == food:
+    if snek == food:
         eatFood()
+    
+    for body in snek_body:
+        if body != snek_body[-1]:
+            if snek == body:
+                master.destroy()
 
-    if snek[1][0] < 0:
+    if snek[0] < 0:
         master.destroy()
-    elif snek[1][0] > 31:
-        master.destroy()
-
-    if snek[1][1] < 0:
-        master.destroy()
-    elif snek[1][1] > 23:
+    elif snek[0] > 31:
         master.destroy()
 
-    C.update()
+    if snek[1] < 0:
+        master.destroy()
+    elif snek[1] > 23:
+        master.destroy()
+
+    try:
+        C.update()
+    except:
+        master.destroy()
 
 mainloop()

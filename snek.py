@@ -70,12 +70,6 @@ genFood()
 
 Snake = C.create_rectangle(snek_coord, fill = "white")
 
-for x in snek_body:
-    snek_body_x = x[0] * size
-    snek_body_y = x[1] * size
-    snek_body_coord = snek_body_x, snek_body_y, snek_body_x + size, snek_body_y + size 
-    SnakeBody = C.create_rectangle(snek_body_coord, fill = "white")
-
 while True:
     if keyboard.is_pressed('w') and dir[1] != 1:
         dir = [0, 0]
@@ -90,6 +84,14 @@ while True:
         dir = [0, 0]
         dir[0] = 1
 
+    for x in snek_body:
+        snek_body_x = x[0] * size
+        snek_body_y = x[1] * size
+        snek_body_coord = snek_body_x, snek_body_y, snek_body_x + size, snek_body_y + size 
+        SnakeBody = C.create_rectangle(snek_body_coord, fill = "white")
+
+    C.delete(SnakeBody)
+
     move(dir)
     modify()
     time.sleep(0.1)
@@ -97,10 +99,10 @@ while True:
     if snek == food:
         eatFood()
     
-    for body in snek_body:
-        if body != snek_body[-1]:
-            if snek == body:
-                master.destroy()
+    snek_head = snek_body.pop()
+
+    if snek_head in snek_body:
+        master.destroy()
 
     if snek[0] < 0:
         master.destroy()
@@ -116,5 +118,7 @@ while True:
         C.update()
     except:
         master.destroy()
+
+    snek_body.append(snek_head)
 
 mainloop()

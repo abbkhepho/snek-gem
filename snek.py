@@ -35,13 +35,17 @@ def genFood():
     food_x = randint(0, w - 1)
     food_y = randint(0, h - 1)
     food = [food_x, food_y]
-    foodsize_x = food_x * size
-    foodsize_y = food_y * size
-    food_coord = foodsize_x, foodsize_y, foodsize_x + size, foodsize_y + size
-    food_entity = C.create_rectangle(food_coord, fill = "yellow")
+    if food in snek or food in snek_body:
+        genFood()
+    else:
+        foodsize_x = food_x * size
+        foodsize_y = food_y * size
+        food_coord = foodsize_x, foodsize_y, foodsize_x + size, foodsize_y + size
+        food_entity = C.create_rectangle(food_coord, fill = "yellow")
 
 def eatFood():
-    del food[0]
+    global food
+    del food
     C.delete(food_entity)
     genFood()
  
@@ -65,10 +69,10 @@ for row in range(0, w):
     x += size
     y = 0
 
+Snake = C.create_rectangle(snek_coord, fill = "white")
+
 C.update()
 genFood()
-
-Snake = C.create_rectangle(snek_coord, fill = "white")
 
 while True:
     if keyboard.is_pressed('w') and dir[1] != 1:
